@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="addtocart.css">
+    <style>
+        .cart-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .cart-details {
+            flex: 1;
+            text-align: left;
+            font-size: 16px;
+            color: #333;
+            margin: 5px 0;
+        }
+        .cart-details p {
+            margin: 5px 0;
+        }
+        .quantity-controls button {
+            background: transparent; /* Removed blue background */
+            color: black; /* Set text color to black for + and - */
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none; /* Removed border */
+            font-size: 17px; /* Adjusted size for + and - signs */
+        }
+
+        .quantity-controls button:hover {
+            background: transparent; /* No background on hover */
+        }
+
+        .quantity-controls button:before {
+            color: black; /* Changed - and + to black */
+        }
+
+        .proceed-checkout, .remove-item, .buy-again {
+            background: #000000;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: background 0.3s ease, color 0.3s ease; /* Added color transition */
+        }
+
+        .proceed-checkout:hover {
+            background: #253027;
+            color: black; /* Change text color to black on hover */
+        }
+
+        .remove-item:hover {
+            background: #ff4d4d;
+            color: black; /* Change text color to black on hover */
+        }
+
+        .remove-item {
+            background: #ff4d4d;
+        }
+        .remove-item:hover {
+            background: #cc0000;
+        }
+        .button-group {
+            display: flex;
+            align-items: center;
+        }
+        .order-placed-label {
+            color: #28a745; /* Softer green color */
+            font-weight: bold;
+            font-size: 14px;
+            padding: 6px 12px;
+            border: 1px solid #28a745; /* Border matching the text color */
+            border-radius: 20px; /* Rounded corners */
+            background-color: #e8f5e9; /* Light green background */
+            display: inline-flex;
+            align-items: center;
+            gap: 6px; /* Space between icon and text */
+        }
+        .order-placed-label::before {
+            content: "✓"; /* Checkmark icon */
+            font-size: 16px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <section class="cart-container">
+        <h1>Your Shopping Cart</h1>
+        <div id="cart-items"></div>
+    </section>
+    
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize cart if it doesn't exist
+    if (!localStorage.getItem("cart")) {
+        localStorage.setItem("cart", JSON.stringify([]));
+    }
+
+    // Retrieve cart from localStorage
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartItemsContainer = document.getElementById("cart-items");
+
+    // Function to update the cart display
+    function updateCartDisplay() {
+        cartItemsContainer.innerHTML = "";
+
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+        } else {
+            cart.forEach((item, index) => {
+                let itemPrice = parseFloat(item.price) || 0;
+                let itemQuantity = parseInt(item.quantity) || 1;
+                let itemTotal = itemPrice * itemQuantity;
+
+                const cartItemHTML = `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div class="cart-details">
+                            <p><strong>${item.name}</strong></p>
+                            <p>${item.description}</p>
+                            <p>Size: ${item.size || "N/A"}</p>
+                            <p>Price: $${itemPrice.toFixed(2)}</p>
+                            <div class="quantity-controls">
+                                <button class="decrease-qty" data-index="${index}">-</button>
+                                <span class="item-qty">${itemQuantity}</span>
+                                <button class="increase-qty" data-index="${index}">+</button>
+                            </div>
+                            <p><strong>Subtotal: $${itemTotal.toFixed(2)}</strong></p>
+                        </div>
+                        <div class="button-group">
+                            <button class="remove-item" data-index="${index}">Remove</button>
+                            ${item.ordered ? `
+                                <span class="order-placed-label">Order Placed</span>
+                                <button class="buy-again" data-index="${index}">Buy Again</button>
+                            ` : `
+                                <button class="proceed-checkout" data-index="${index}">Checkout</button>
+                            `}
+                        </div>
+                    </div>
+                `;
+                cartItemsContainer.innerHTML += cartItemHTML;
+            });
+
+            // Add event listeners for Checkout buttons after rendering the cart items
+            document.querySelectorAll(".proceed-checkout").forEach(button => {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    // Get the index of the selected item
+                    const index = this.getAttribute("data-index");
+
+                    // Retrieve the cart from localStorage
+                    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+                    // Get the selected item's details
+                    const selectedItem = cart[index];
+
+                    // Mark the item as ordered
+                    selectedItem.ordered = true;
+
+                    // Update the cart in localStorage
+                    localStorage.setItem("cart", JSON.stringify(cart));
+
+                    // Store the selected item's details in localStorage
+                    localStorage.setItem("selectedItem", JSON.stringify(selectedItem));
+
+                    // Redirect to checkout.html
+                    window.location.href = "checkout.html";
+                });
+            });
+
+            // Add event listeners for Buy Again buttons
+            document.querySelectorAll(".buy-again").forEach(button => {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    // Get the index of the selected item
+                    const index = this.getAttribute("data-index");
+
+                    // Retrieve the cart from localStorage
+                    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+                    // Get the selected item's details
+                    const selectedItem = cart[index];
+
+                    // Store the selected item's details in localStorage
+                    localStorage.setItem("selectedItem", JSON.stringify(selectedItem));
+
+                    // Redirect to checkout.html
+                    window.location.href = "checkout.html";
+                });
+            });
+        }
+
+        addEventListeners();
+    }
+
+    // Function to add event listeners for quantity controls and remove buttons
+    function addEventListeners() {
+        // Increase quantity
+        document.querySelectorAll(".increase-qty").forEach(button => {
+            button.addEventListener("click", function () {
+                let index = parseInt(this.getAttribute("data-index"));
+                cart[index].quantity++;
+                localStorage.setItem("cart", JSON.stringify(cart)); // Update localStorage
+                updateCartDisplay();
+            });
+        });
+
+        // Decrease quantity
+        document.querySelectorAll(".decrease-qty").forEach(button => {
+            button.addEventListener("click", function () {
+                let index = parseInt(this.getAttribute("data-index"));
+                if (cart[index].quantity > 1) {
+                    cart[index].quantity--;
+                } else {
+                    cart.splice(index, 1); // Remove item if quantity is 1
+                }
+                localStorage.setItem("cart", JSON.stringify(cart)); // Update localStorage
+                updateCartDisplay();
+            });
+        });
+
+        // Remove item
+        document.querySelectorAll(".remove-item").forEach(button => {
+            button.addEventListener("click", function () {
+                let index = parseInt(this.getAttribute("data-index"));
+                if (!isNaN(index) && index >= 0) {
+                    cart.splice(index, 1);
+                    localStorage.setItem("cart", JSON.stringify(cart)); // Update localStorage
+                    updateCartDisplay();
+                }
+            });
+        });
+    }
+
+    // Initial cart display
+    updateCartDisplay();
+});
+    </script>
+</body>
+</html>

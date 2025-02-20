@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="product.css">
+    <title>Product Details</title>
+</head>
+
+<body>
+    <section class="top-txt">
+        <div class="head container">
+            <div class="head-txt">
+                <p>Free shipping, 10-day return or refund guarantee.</p>
+            </div>
+        </div>
+    </section>
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <input type="checkbox" name="" id="checkbox">
+            <div class="hamburger-lines">
+                <span class="line line1"></span>
+                <span class="line line2"></span>
+                <span class="line line3"></span>
+            </div>
+            <ul class="menu-items">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#sellers">Shop</a></li>
+                <li><a href="#news">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="addtocart.html">Cart</a></li>
+            </ul>
+            <div class="logo">
+                <img src="images/logo/WhatsApp Image 2025-02-15 at 5.17.25 PM.jpeg" alt="">
+            </div>
+        </div>
+    </nav>
+
+    <!-- IMAGE PART -->
+    <section class="product-details container">
+        <!-- Left Side: Product Image -->
+        <div class="product-images">
+            <div class="slider">
+                <button id="prev-btn">&lt;</button>
+                <div class="slider-container">
+                    <img id="product-image" class="slider-img" src="" alt="Product Image">
+                </div>
+                <button id="next-btn">&gt;</button>
+            </div>
+        </div>
+
+        <div class="product-info">
+            <h1 id="product-name"></h1>
+            <p class="stock-status">IN STOCK</p>
+        
+            <div class="price">
+                <span id="product-price"></span>
+            </div>
+        
+            <!-- Description Section -->
+            <div class="product-description">
+                <p id="product-desc"></p> <!-- This will display the description -->
+            </div>
+        
+            <!-- Size Selection -->
+            <div class="size-section">
+                <label style="color: black;"><b>SIZE</b></label>
+                <div class="size-options">
+                    <button class="size-btn">2XL</button>
+                    <button class="size-btn">3XL</button>
+                </div>
+            </div>
+        </div>
+
+            <style>
+                .product-images {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .slider {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .slider-container {
+                    width: 300px;
+                    height: auto;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                .slider-img {
+                    max-width: 100%;
+                    height: auto;
+                    object-fit: contain;
+                }
+
+                #prev-btn,
+                #next-btn {
+                    background-color: gray;
+                    border: none;
+                    padding: 10px;
+                    cursor: pointer;
+                    color: white;
+                    font-size: 20px;
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+            </style>
+
+            <!-- Add to Cart -->
+            <a href="addtocart.html">
+                <button id="add-to-cart">ADD TO BAG</button>
+            </a>
+
+            <!-- Product Description Below the Add to Bag Button -->
+            <p id="product-description" style="margin-top: 20px;"></p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container container">
+            <div class="content_1">
+                <img src="images/logo/WhatsApp Image 2025-02-15 at 5.17.25 PM.jpeg" alt="logo">
+                <p>The customer is at the heart of our<br>unique business model, which includes<br>design.</p>
+            </div>
+            <div class="content_2">
+                <h4>SHOPPING</h4>
+                <a href="#sellers">Clothing Store</a>
+                <a href="#sellers">Trending Shoes</a>
+                <a href="#sellers">Accessories</a>
+                <a href="#sellers">Sale</a>
+            </div>
+            <div class="content_3">
+                <h4>SHOPPING</h4>
+                <a href="./contact.html">Contact Us</a>
+                <a href="#" target="_blank">Payment Method</a>
+                <a href="#" target="_blank">Delivery</a>
+                <a href="#" target="_blank">Return and Exchange</a>
+            </div>
+            <div class="content_4">
+                <h4>NEWLETTER</h4>
+                <p>Be the first to know about new<br>arrivals, look books, sales & promos!</p>
+                <div class="f-mail">
+                    <input type="email" placeholder="Your Email">
+                    <i class='bx bx-envelope'></i>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="script.js" >
+    </script>
+
+</body>
+
+</html>

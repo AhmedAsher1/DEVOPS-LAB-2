@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+    <section class="checkout-container">
+        <h1>Checkout</h1>
+        <div class="checkout-grid">
+            <!-- Selected Item Section -->
+            <div class="item-section">
+                <h2>Selected Item</h2>
+                <div class="item-details">
+                    <img src="https://via.placeholder.com/150" alt="Product Image" class="item-image">
+                    <div class="item-info">
+                        <h3 class="item-name">Product Name</h3>
+                        <p class="item-price">$50.00</p>
+                        <p class="item-quantity">Quantity: 1</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Address and Customer Details Section -->
+            <div class="shipping-section">
+                <h2>Shipping Address</h2>
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name:</label>
+                            <input type="text" id="first-name" name="first-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name:</label>
+                            <input type="text" id="last-name" name="last-name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="street-address">Street Address:</label>
+                        <input type="text" id="street-address" name="street-address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="country">Country:</label>
+                            <select id="country" name="country" required>
+                                <option value="">Select Country</option>
+                                <option value="usa">Pakistan</option>
+                                <option value="canada">UAE</option>
+                                
+                                <!-- Add more countries as needed -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State/Province:</label>
+                            <input type="text" id="state" name="state" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City:</label>
+                            <input type="text" id="city" name="city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number:</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    <button type="submit">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const checkoutForm = document.getElementById("checkout-form");
+
+    // Retrieve selected item details from localStorage
+    const selectedItem = JSON.parse(localStorage.getItem("selectedItem"));
+
+    if (selectedItem) {
+        // Calculate the subtotal price (price × quantity)
+        const itemPrice = parseFloat(selectedItem.price) || 0;
+        const itemQuantity = parseInt(selectedItem.quantity) || 1;
+        const subtotalPrice = itemPrice * itemQuantity;
+
+        // Display the selected item's details
+        document.querySelector(".item-name").textContent = selectedItem.name;
+        document.querySelector(".item-price").textContent = `$${itemPrice.toFixed(2)}`;
+        document.querySelector(".item-quantity").textContent = `Quantity: ${itemQuantity}`;
+        document.querySelector(".item-image").src = selectedItem.image;
+
+        // Display the size (if available)
+        const sizeElement = document.createElement("p");
+        sizeElement.textContent = `Size: ${selectedItem.size || "N/A"}`;
+        sizeElement.classList.add("item-size"); // Add a class for styling
+
+        // Append size below item details
+        document.querySelector(".item-info").appendChild(sizeElement);
+
+        // Display the subtotal price
+        const subtotalElement = document.createElement("p");
+        subtotalElement.textContent = `Subtotal: $${subtotalPrice.toFixed(2)}`;
+        subtotalElement.classList.add("subtotal-price"); // Add a class for styling
+
+        // Append subtotal price below item details
+        document.querySelector(".item-info").appendChild(subtotalElement);
+
+        // Display the description (if available)
+        const descriptionElement = document.createElement("p");
+        descriptionElement.textContent = selectedItem.description || "No description available.";
+        descriptionElement.classList.add("item-description");
+
+        // Append description below item details
+        document.querySelector(".item-info").appendChild(descriptionElement);
+    }
+
+    checkoutForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        // Collect form data
+        const formData = {
+            email: document.getElementById("email").value,
+            firstName: document.getElementById("first-name").value,
+            lastName: document.getElementById("last-name").value,
+            streetAddress: document.getElementById("street-address").value,
+            country: document.getElementById("country").value,
+            state: document.getElementById("state").value,
+            city: document.getElementById("city").value,
+            phone: document.getElementById("phone").value,
+            productName: selectedItem.name,
+            productPrice: selectedItem.price,
+            quantity: selectedItem.quantity
+        };
+
+        // Save form data to localStorage
+        localStorage.setItem("checkoutData", JSON.stringify(formData));
+
+        // Redirect to a confirmation page or show a success message
+        alert("Order placed successfully!");
+        window.location.href = "addtocart.html";
+    });
+});
+    </script>
+</body>
+</html>
